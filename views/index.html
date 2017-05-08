@@ -1,0 +1,42 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+
+<!-- You might want to try something fancier: -->
+<!-- html/nunjucks docs: https://mozilla.github.io/nunjucks/ -->
+<!-- pug: https://pugjs.org/ -->
+<!-- haml: http://haml.info/ -->
+<!-- hbs(handlebars): http://handlebarsjs.com/ -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome to Glitch!</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <meta name="description" content="A cool thing made with Glitch">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+<div class="container">
+  
+<p class="text-center">
+  Bitte scanne die Karte und wähle entweder "Check-In" oder "Check-Out" aus.
+  Dies ist eine Testversion.
+  </p>
+<div class="form-group">
+<form action="https://ablaze-receipt.glitch.me/old-buerger" method="post">
+  Code: <input class="form-control" type="text" name="verify"><br>
+  Kartennummer: <input class="form-control" type="text" name="code" required><br>
+ <input class="form-control" type="radio" name="status" value="checkin" checked> Check-In<br>
+  <input class="form-control" type="radio" name="status" value="checkout"> Check-Out<br>
+  <br>
+  <input class="btn-default" type="submit" value="Absenden">
+</form>
+  </div>
+    </div>
+
+
+  </body>
+</html>
