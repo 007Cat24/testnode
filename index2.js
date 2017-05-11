@@ -61,8 +61,12 @@ function fulfillOrder (ID) {
       update({Status: "In Delivery"}).
       run(connection, function(err, result) {
           if (err) throw err;
+          if (result != null) {
           // console.log(JSON.stringify(result, null, 2));
           console.log("Changed status to 'In Delivery'")
+        } else {
+          console.log('Bestellung nicht gefunden')
+        }
       });
       r.table('orders').
   filter(r.row("id").eq(ID)).
@@ -70,7 +74,11 @@ function fulfillOrder (ID) {
   run(connection, function(err, result) {
       if (err) throw err;
       // console.log(JSON.stringify(result, null, 2));
+      if (result != null) {
       console.log("Order has been shipped")
+    } else {
+      console.log('')
+    }
   });
   r.table('orders').
 filter(r.row("id").eq(ID)).
@@ -92,9 +100,13 @@ function trackOrder (ID) {
       r.table('orders').get(ID).
     run(connection, function(err, result) {
         if (err) throw err;
+        if (result != null) {
         var received = String(result.Time)
-        console.log('Die Bestellung sollte ' + moment().endOf('hour').fromNow() + ' ankommen. Wir haben sie um ' + received + ' erhalten (Rechne mit etwa 40 Minuten Lieferzeit).')      
+        console.log('Die Bestellung sollte ' + moment().endOf('hour').fromNow() + ' ankommen. Wir haben sie um ' + received + ' erhalten (Rechne mit etwa 40 Minuten Lieferzeit).')
       //  console.log(JSON.stringify(result, null, 2));
+    } else {
+      //console.log('Diese Bestellung existiert nicht')
+    }
     });
       });
 };
@@ -180,3 +192,4 @@ rl.on('line', function(line) {
 }).on('close',function(){
     process.exit(0);
 });
+
