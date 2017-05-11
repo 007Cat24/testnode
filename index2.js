@@ -17,6 +17,7 @@ function createNewOrder (ID, Contents, Company, Type, Priority) {
   this.Day = moment().format('LL')
   this.Fulfilled = false
   this.Status = "Received"
+  this.lastSeen = moment().format('LT')
   // Future additions down below:
 
   }
@@ -44,7 +45,7 @@ r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
 })
 };
 var testcontents = [{name: "Butter", amount: 2, type: "Food"}]
-createNewOrder("000000", testcontents, "McBeauty", "Food", "0")
+//createNewOrder("000000", testcontents, "McBeauty", "Food", "0")
 /*
 Some statuses:
 Added into System: Received
@@ -65,15 +66,42 @@ function fulfillOrder (ID) {
       });
       r.table('orders').
   filter(r.row("id").eq(ID)).
-  update({Fulfilled: true}).
+  update({Fulfilled: false}).
   run(connection, function(err, result) {
       if (err) throw err;
       // console.log(JSON.stringify(result, null, 2));
-      console.log("Fulfilled order")
+      console.log("Order has been shipped")
   });
+  r.table('orders').
+filter(r.row("id").eq(ID)).
+update({lastSeen: moment().format('LT')}).
+run(connection, function(err, result) {
+  if (err) throw err;
+  // console.log(JSON.stringify(result, null, 2));
+});
       });
       console.log('')
 };
+
+
+
+function trackOrder (ID) {
+  r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
+      if (err) throw err;
+      connection = conn;
+      r.table('orders').get(ID).
+    run(connection, function(err, result) {
+        if (err) throw err;
+        var received = String(result.Time)
+        console.log('Die Bestellung sollte ' + moment().endOf('hour').fromNow() + ' ankommen. Wir haben sie um ' + received + ' erhalten (Rechne mit etwa 40 Minuten Lieferzeit).')      
+      //  console.log(JSON.stringify(result, null, 2));
+    });
+      });
+};
+
+
+
+
 
 function deliverOrder (ID) {
   r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
@@ -95,6 +123,14 @@ function deliverOrder (ID) {
       // console.log(JSON.stringify(result, null, 2));
       console.log("Customer has received order")
   });
+  r.table('orders').
+filter(r.row("id").eq(ID)).
+update({lastSeen: moment().format('LT')}).
+run(connection, function(err, result) {
+  if (err) throw err;
+  // console.log(JSON.stringify(result, null, 2));
+  console.log("Fulfilled order")
+});
       });
       console.log('')
 };
@@ -104,15 +140,12 @@ function deliverOrder (ID) {
   // TODO: Log the answer in a database
   fulfillOrder(answer)
   console.log(`Order ${answer} has been fulfilled.`);
-
   rl.close();
 });
-
 rl.question('Please scan the order to deliver it: ', (answer) => {
   // TODO: Log the answer in a database
   deliverOrder(answer)
   console.log(`Order ${answer} has been delivered.`);
-
   rl.close();
 });
 */
@@ -120,14 +153,27 @@ rl.setPrompt('Scan the ID please: ');
 rl.prompt();
 rl.on('line', function(line) {
     if (line != "") {
-      rl.question('Please choose between delivery (1) and shipping (2): ', (answer) => {
+      rl.question('Please choose between delivery (1), shipping (2), a new order (3) and tracking (4): ', (answer) => {
         if (answer == 1) {
         deliverOrder(line)
         console.log(`Order ${line} has been delivered.`);
       } else if (answer == 2) {
         fulfillOrder(line)
         console.log(`Order ${line} has been fulfilled.`);
-      }
+      } else if (answer == 3) {
+        console.log('Ok')
+        rl.question('Enter the company: ', function (comp) {
+          rl.question('Enter the priority: ', function (priority) {
+            rl.question('Enter the type please: ', function (type) {
+            var testcontents = [{name: "Butter", amount: 2, type: "Food"}]
+            console.log('Processing')
+            createNewOrder(line, testcontents, comp, type, priority)
+          })
+        })
+      })
+    } else if (answer == 4)
+     console.log('Tracking...')
+     trackOrder(line)
       });
     };
     rl.prompt();
