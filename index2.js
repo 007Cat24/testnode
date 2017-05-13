@@ -6,7 +6,7 @@ var rl = readline.createInterface({
 });
 var moment = require('moment');
 moment.locale('de');
-function createNewOrder (ID, Contents, Company, Type, Priority) {
+function createNewOrder (ID, Contents, Company, Type, Priority, Extra) {
   var Order = function() {
   this.id = ID;
   this.Contents = Contents;
@@ -17,6 +17,7 @@ function createNewOrder (ID, Contents, Company, Type, Priority) {
   this.Day = moment().format('LL')
   this.Fulfilled = false
   this.Status = "Received"
+  this.extraInformation = Extra;
   this.lastSeen = moment().format('LT')
   // Future additions down below:
 
@@ -177,12 +178,16 @@ rl.on('line', function(line) {
         rl.question('Enter the company: ', function (comp) {
           rl.question('Enter the priority: ', function (priority) {
             rl.question('Enter the type please: ', function (type) {
+              rl.question('Enter the content(s) please: ', function (contents) {
+              rl.question('Any extra information ? ', function (extra) {
             var testcontents = [{name: "Butter", amount: 2, type: "Food"}]
             console.log('Processing')
-            createNewOrder(line, testcontents, comp, type, priority)
+            createNewOrder(line, contents, comp, type, priority, extra)
+          })
           })
         })
       })
+    })
     } else if (answer == 4)
      console.log('Tracking...')
      trackOrder(line)
@@ -192,4 +197,3 @@ rl.on('line', function(line) {
 }).on('close',function(){
     process.exit(0);
 });
-
