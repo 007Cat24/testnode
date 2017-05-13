@@ -1,27 +1,20 @@
-Welcome to the Glitch BETA
+Warenlager
 =========================
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
-
-Glitch is a developer playground that lets you code a real web-app without the slow setup and deployment steps.
-
-[About Glitch](https://glitch.com/about)
+Diese Software dient zur Verwaltung von Bestellungen im Warenlager.
 
 
-Your Project
+
+INFOS
 ------------
 
-On the back-end,
-- your app starts at `server.js`
-- add frameworks and packages in `package.json`
-- safely store app secrets in `.env`
-
-On the front-end,
-- edit `public/client.js`, `public/style.css` and `views/index.html`
-- drag in `assets`, like images or music, to add them to your project
+Wichtige Module:
+- RethinkDB
+- Readline
+- Moment.js
 
 
-Made by Fog Creek
+007Cat24
 -----------------
 
-\ ゜o゜)ノ
+
